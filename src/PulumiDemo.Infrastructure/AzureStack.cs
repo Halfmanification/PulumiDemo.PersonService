@@ -27,19 +27,19 @@ public class AzureStack : Stack
             Location = Locations.WestEurope,
         });
 
-        var storageAccount = new StorageAccount(_names.StorageAccount, new()
-        {
-            ResourceGroupName = resourceGroup.Name,
-            AccountName = _names.StorageAccount,
-            Location = resourceGroup.Location,
-            Kind = StorageKind.StorageV2,
-            Sku = new StorageSkuArgs
-            {
-                Name = StorageSkuName.Standard_LRS
-            },
-            EnableHttpsTrafficOnly = true,
-            AllowBlobPublicAccess = false,
-            MinimumTlsVersion = TLS_Versions.TLS1_2,
-        }, new() { DependsOn = { resourceGroup } });
+        // var storageAccount = new StorageAccount(_names.StorageAccount, new()
+        // {
+        //     ResourceGroupName = resourceGroup.Name,
+        //     AccountName = _names.StorageAccount,
+        //     Location = resourceGroup.Location,
+        //     Kind = StorageKind.StorageV2,
+        //     Sku = new StorageSkuArgs
+        //     {
+        //         Name = StorageSkuName.Standard_LRS
+        //     },
+        //     EnableHttpsTrafficOnly = true,
+        //     AllowBlobPublicAccess = false,
+        //     MinimumTlsVersion = TLS_Versions.TLS1_2,
+        // }, new() { DependsOn = { resourceGroup } });
     }
 }
