@@ -15,6 +15,8 @@ public class AzureStack : Stack
     public AzureStack()
     {
         _names = new Names("PulumiDemo.PersonService", "PDPerSer", "dev");
+
+        CreateResources();
     }
 
     public void CreateResources()
