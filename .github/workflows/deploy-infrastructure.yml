@@ -10,13 +10,11 @@ on:
       - 'src/**/*.Infrastructure/**' # Watch for changes in the Infrastructure folder
 
 env:
-  # ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  # ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  # ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  # ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   AZURE_STORAGE_ACCOUNT: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-
-# have to do shit like this to trigger pipeline, will improve later
 
 jobs:
   deploy:
@@ -26,22 +24,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Print Azure credentials
-      #   run: echo "${{ secrets.AZURE_CREDENTIALS }}"
-
-      - name: Parse Azure credentials and set environment variables
-        run: |
-          AZURE_CREDENTIALS="${{ secrets.AZURE_CREDENTIALS }}"
-          ARM_CLIENT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.["clientId"]')
-          ARM_CLIENT_SECRET=$(echo "$AZURE_CREDENTIALS" | jq -r '.["clientSecret"]')
-          ARM_TENANT_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.["tenantId"]')
-          ARM_SUBSCRIPTION_ID=$(echo "$AZURE_CREDENTIALS" | jq -r '.["subscriptionId"]')
-          echo "ARM_CLIENT_ID=$ARM_CLIENT_ID" >> $GITHUB_ENV
-          echo "::add-mask::$ARM_CLIENT_SECRET" >> $GITHUB_ENV
-          echo "ARM_TENANT_ID=$ARM_TENANT_ID" >> $GITHUB_ENV
-          echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID" >> $GITHUB_ENV
-
-      
       - name: Find Work Directory
         run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
 
