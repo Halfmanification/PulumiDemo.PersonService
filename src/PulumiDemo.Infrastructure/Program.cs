@@ -4,5 +4,5 @@ namespace PulumiDemo.PersonService.Infrastructure;
 
 class Program
 {
-    static Task<int> Main() => Deployment.RunAsync<AzureStack>();
+    static async Task<int> Main() => await Deployment.RunAsync<AzureStack>();
 }
