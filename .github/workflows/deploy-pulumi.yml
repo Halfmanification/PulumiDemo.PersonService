@@ -47,11 +47,6 @@ jobs:
           cd pulumi
           pulumi stack select ${{ env.PULUMI_PROJECT_NAME}} || pulumi stack init ${{ env.PULUMI_PROJECT_NAME}}
 
-      - name: NPM Install
-        run: |
-          cd pulumi
-          npm install
-
       - name: Pulumi Up (Deploy)
         uses: pulumi/actions@v4
         with:
