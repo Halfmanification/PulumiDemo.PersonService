@@ -14,7 +14,5 @@ public class Startup : FunctionsStartup
         // });
 
         // builder.Services.AddSingleton<ILoggerProvider, MyLoggerProvider>();
-
-        // Testing making changes hoping here hoping pipeline for infrastructure doesn't trigger
     }
 }

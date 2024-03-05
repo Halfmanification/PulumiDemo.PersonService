@@ -9,8 +9,6 @@ on:
       - '.github/workflows/deploy-infrastructure.yml' # Watch for changes in this workflow file
       - './src/*.Infrastructure/**' # Watch for changes in the Infrastructure folder
 
-# test-comment
-
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
