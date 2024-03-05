@@ -29,15 +29,16 @@ jobs:
 
       - name: Parse Azure credentials and set environment variables
         run: |
-          echo "${{ secrets.AZURE_CREDENTIALS }}" > azure-credentials.json
-          ARM_CLIENT_ID=$(jq -r '.clientId' azure-credentials.json)
-          ARM_CLIENT_SECRET=$(jq -r '.clientSecret' azure-credentials.json)
-          ARM_TENANT_ID=$(jq -r '.tenantId' azure-credentials.json)
-          ARM_SUBSCRIPTION_ID=$(jq -r '.subscriptionId' azure-credentials.json)
+          echo "${{ secrets.AZURE_CREDENTIALS }}" > azure-credentials.txt
+          ARM_CLIENT_ID=$(grep -oP 'clientId:\s*\K.*' azure-credentials.txt)
+          ARM_CLIENT_SECRET=$(grep -oP 'clientSecret:\s*\K.*' azure-credentials.txt)
+          ARM_TENANT_ID=$(grep -oP 'tenantId:\s*\K.*' azure-credentials.txt)
+          ARM_SUBSCRIPTION_ID=$(grep -oP 'subscriptionId:\s*\K.*' azure-credentials.txt)
           echo "ARM_CLIENT_ID=$ARM_CLIENT_ID" >> $GITHUB_ENV
           echo "ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=$ARM_TENANT_ID" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID" >> $GITHUB_ENV
+
       
       - name: Find Work Directory
         run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
