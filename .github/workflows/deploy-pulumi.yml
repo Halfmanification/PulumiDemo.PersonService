@@ -58,3 +58,5 @@ jobs:
           stack-name: ${{ env.PULUMI_PROJECT_NAME}}
           cloud-url: azblob://pulumi-stacks
           secrets-provider: default
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ""
