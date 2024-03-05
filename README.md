@@ -90,7 +90,7 @@ This job handles the deployment of infrastructure using Pulumi.
 
 #### Conditions
 
-The job runs only when a push event occurs on the "main" branch.
+The job runs only when a push event occurs on the "main" branch in certain files/folders, or if manually triggered in GitHub by a user.
 
 #### Operating System
 
