@@ -47,7 +47,7 @@ jobs:
 
       - name: Ensure Pulumi Stack
         run: |
-          cd pulumi
+          cd ${{ env.PULUMI_WORK_DIR }}
           pulumi stack select ${{ env.PULUMI_PROJECT_NAME}} || pulumi stack init ${{ env.PULUMI_PROJECT_NAME}}
 
       - name: Pulumi Up (Deploy)
