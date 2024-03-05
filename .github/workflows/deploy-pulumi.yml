@@ -1,0 +1,64 @@
+name: Deploy Infrastructure to Azure with Pulumi
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main # Trigger the action when code is pushed to the 'main' branch
+
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_STORAGE_ACCOUNT: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Install Pulumi CLI
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+      - name: Pulumi Login
+        run: pulumi login --cloud-url azblob://pulumi-stacks
+
+      - name: Get pulumi stack name
+        run: |
+          echo "PULUMI_PROJECT_NAME=$(grep 'name:' ./pulumi/Pulumi.yml | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Ensure Pulumi Stack
+        run: |
+          cd pulumi
+          pulumi stack select ${{ env.PULUMI_PROJECT_NAME}} || pulumi stack init ${{ env.PULUMI_PROJECT_NAME}}
+
+      - name: NPM Install
+        run: |
+          cd pulumi
+          npm install
+
+      - name: Pulumi Up (Deploy)
+        uses: pulumi/actions@v4
+        with:
+          command: up
+          work-dir: ./pulumi
+          stack-name: ${{ env.PULUMI_PROJECT_NAME}}
+          cloud-url: azblob://pulumi-stacks
+          secrets-provider: passphrase
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ""
