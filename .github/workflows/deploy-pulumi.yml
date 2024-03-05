@@ -33,7 +33,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Check if Pulumi CLI is installed
+        id: pulumi-check
+        run: pulumi version || echo "Pulumi CLI not found"
+
       - name: Install Pulumi CLI
+        if: steps.pulumi-check.outcome == 'failure'
         run: |
           curl -fsSL https://get.pulumi.com | sh
           echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
