@@ -20,10 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       
-      - name: Find Pulumi working directory
-        run: |
-          PULUMI_WORK_DIR=$(find . -type d -name "*.Infrastructure" -print -quit)
-          echo "::set-env name=PULUMI_WORK_DIR::$PULUMI_WORK_DIR"
+      - name: Find Work Directory
+        run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
 
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v1
