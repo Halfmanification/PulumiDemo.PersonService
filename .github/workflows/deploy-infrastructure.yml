@@ -35,10 +35,9 @@ jobs:
           ARM_TENANT_ID=$(grep -oP 'tenantId:\s*\K.*' azure-credentials.txt)
           ARM_SUBSCRIPTION_ID=$(grep -oP 'subscriptionId:\s*\K.*' azure-credentials.txt)
           echo "ARM_CLIENT_ID=$ARM_CLIENT_ID" >> $GITHUB_ENV
-          echo "ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET" >> $GITHUB_ENV
+          echo "::add-mask::ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET" >> $GITHUB_ENV
           echo "ARM_TENANT_ID=$ARM_TENANT_ID" >> $GITHUB_ENV
           echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID" >> $GITHUB_ENV
-
       
       - name: Find Work Directory
         run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
