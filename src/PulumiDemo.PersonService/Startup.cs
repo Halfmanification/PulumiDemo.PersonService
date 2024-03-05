@@ -14,5 +14,7 @@ public class Startup : FunctionsStartup
         // });
 
         // builder.Services.AddSingleton<ILoggerProvider, MyLoggerProvider>();
+
+        // This change should NOT trigger a build
     }
 }
