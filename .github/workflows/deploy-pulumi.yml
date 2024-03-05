@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Find Pulumi working directory
+        run: |
+          PULUMI_WORK_DIR=$(find . -type d -name "*.Infrastructure" -print -quit)
+          echo "::set-env name=PULUMI_WORK_DIR::$PULUMI_WORK_DIR"
 
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v1
@@ -40,7 +45,7 @@ jobs:
 
       - name: Get pulumi stack name
         run: |
-          echo "PULUMI_PROJECT_NAME=$(grep 'name:' ./pulumi/Pulumi.yml | awk '{print $2}')" >> $GITHUB_ENV
+          echo "PULUMI_PROJECT_NAME=$(grep 'name:' ${{ env.PULUMI_WORK_DIR }}/Pulumi.yml | awk '{print $2}')" >> $GITHUB_ENV
 
       - name: Ensure Pulumi Stack
         run: |
@@ -51,9 +56,7 @@ jobs:
         uses: pulumi/actions@v4
         with:
           command: up
-          work-dir: ./pulumi
+          work-dir: ${{ env.PULUMI_WORK_DIR }}
           stack-name: ${{ env.PULUMI_PROJECT_NAME}}
           cloud-url: azblob://pulumi-stacks
           secrets-provider: default
-        env:
-          PULUMI_CONFIG_PASSPHRASE: ""
