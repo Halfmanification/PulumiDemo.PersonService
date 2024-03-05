@@ -35,6 +35,16 @@ jobs:
           echo "ARM_TENANT_ID=$( jq -r '.tenantId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV
         shell: bash
 
+
+      - name: Test printing secrets to see if they are secrets
+        run: |
+          echo "ARM_CLIENT_ID=$ARM_CLIENT_ID"
+          echo "ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET"
+          echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID"
+          echo "ARM_TENANT_ID=$ARM_TENANT_ID"
+          echo "AZURE_STORAGE_ACCOUNT=$AZURE_STORAGE_ACCOUNT"
+          echo "AZURE_CREDENTIALS=${{ secrets.AZURE_CREDENTIALS }}"
+
       - name: Find Work Directory
         run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
 
