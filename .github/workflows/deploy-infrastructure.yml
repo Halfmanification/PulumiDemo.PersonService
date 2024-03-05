@@ -10,10 +10,6 @@ on:
       - 'src/**/*.Infrastructure/**' # Watch for changes in the Infrastructure folder
 
 env:
-  # ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  # ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-  # ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  # ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
   AZURE_STORAGE_ACCOUNT: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
 
 jobs:
@@ -24,26 +20,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Prepare environment variables
+      - name: Parse Azure Credentials into Environment Variables
         env:
           AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
         run: | 
-          # Parse Azure secret into Terraform variables
           echo "ARM_CLIENT_ID=$( jq -r '.clientId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
           echo "ARM_CLIENT_SECRET=$( jq -r '.clientSecret' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
           echo "ARM_SUBSCRIPTION_ID=$( jq -r '.subscriptionId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
           echo "ARM_TENANT_ID=$( jq -r '.tenantId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV
         shell: bash
-
-
-      - name: Test printing secrets to see if they are secrets
-        run: |
-          echo "ARM_CLIENT_ID=$ARM_CLIENT_ID"
-          echo "ARM_CLIENT_SECRET=$ARM_CLIENT_SECRET"
-          echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID"
-          echo "ARM_TENANT_ID=$ARM_TENANT_ID"
-          echo "AZURE_STORAGE_ACCOUNT=$AZURE_STORAGE_ACCOUNT"
-          echo "AZURE_CREDENTIALS=${{ secrets.AZURE_CREDENTIALS }}"
 
       - name: Find Work Directory
         run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
