@@ -69,7 +69,7 @@ jobs:
 
       - name: Print environment
         run : | 
-          echo "DEPLOY_ENVIRONMENT: ${{ DEPLOY_ENVIRONMENT }}"
+          echo "DEPLOY_ENVIRONMENT: ${{ env.DEPLOY_ENVIRONMENT }}"
 
       - name: Pulumi Up (Deploy)
         uses: pulumi/actions@v4
@@ -81,4 +81,4 @@ jobs:
           secrets-provider: passphrase
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
-          DEPLOY_ENVIRONMENT: ${{ DEPLOY_ENVIRONMENT }}
+          DEPLOY_ENVIRONMENT: ${{ env.DEPLOY_ENVIRONMENT }}
