@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main # Trigger the action when code is pushed to the 'main' branch
+      - not-main # Trigger the action when code is pushed to the 'main' branch
     paths:
       - '.github/workflows/deploy-infrastructure.yml' # Watch for changes in this workflow file
       - 'src/**/*.Infrastructure/**' # Watch for changes in the Infrastructure folder

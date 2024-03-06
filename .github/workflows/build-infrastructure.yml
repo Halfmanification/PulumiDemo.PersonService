@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main # Trigger the action when code is pushed to the 'main' branch
+    paths:
+      - '.github/workflows/*-infrastructure.yml' # Watch for changes in infrastructure pipeline YAML files
+      - 'src/**/*.csproj' # Watch for changes to infrastructure project csproj files
+  pull_request:
+    branches:
+      - main # Trigger the action when pull requests are made against the 'main' branch
+    paths:
+      - '.github/workflows/*-infrastructure.yml' # Watch for changes in infrastructure pipeline YAML files
+      - 'src/**/*Infrastructure.csproj' # Watch for changes to infrastructure project csproj files
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build and Test
+      run: |
+        cd ./infrastructure
+        dotnet build --configuration Release
+        dotnet test --verbosity normal
