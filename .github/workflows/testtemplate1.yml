@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print azure credentials
-        run: echo ${{ secrets.AZURE_CREDENTIALS }}
+        run: echo ${{ inputs.AZURE_CREDENTIALS }}
 
       - name: Parse Azure Credentials into Environment Variables
         env:
