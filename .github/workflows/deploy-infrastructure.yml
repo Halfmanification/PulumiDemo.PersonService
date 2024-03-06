@@ -22,6 +22,6 @@ jobs:
     with:
       environment: dev
       pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-      pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
+      pulumi_working_directory: ./infrastructure
     secrets:
       azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
