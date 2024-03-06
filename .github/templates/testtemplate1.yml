@@ -12,9 +12,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Print azure credentials
-        run: echo ${{ inputs.AZURE_CREDENTIALS }}
-
       - name: Parse Azure Credentials into Environment Variables
         env:
           AZURE_CREDENTIALS: ${{ inputs.azure_credentials }}

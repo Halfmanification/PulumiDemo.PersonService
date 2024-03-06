@@ -20,9 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Print azure credentials Again
-        run: echo ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: Checkout code
         uses: actions/checkout@v2
         with:
