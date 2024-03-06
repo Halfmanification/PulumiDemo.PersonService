@@ -15,9 +15,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
     - name: Parse Azure Credentials into Environment Variables
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
