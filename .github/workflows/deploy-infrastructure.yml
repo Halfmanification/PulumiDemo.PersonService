@@ -14,14 +14,23 @@ on:
 
 env:
   PULUMI_WORK_DIR: ./infrastructure
+  PULUMI_AZURE_STORAGE_ACCOUNT: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
 
 jobs:
+  setup-environment:
+    name: Setup Dynamic Environment Variables
+    runs-on: ubuntu-latest
+    outputs:
+      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+      pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
+      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+
   deploy:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     uses: Halfmanification/PulumiDemo.PersonService/.github/workflows/reusable-workflow.yml@main
     with:
       environment: dev
-      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-      pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
+      pulumi_azure_storage_account: ${{ needs.setup-environment.outputs.pulumi_azure_storage_account }}
+      pulumi_working_directory: ${{ needs.setup-environment.outputs.pulumi_working_directory }}
     secrets:
-      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      azure_credentials: ${{ needs.setup-environment.outputs.azure_credentials }}
