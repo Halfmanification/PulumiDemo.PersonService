@@ -31,9 +31,6 @@ jobs:
           echo "ARM_TENANT_ID=$( jq -r '.tenantId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV
         shell: bash
 
-      # - name: Find Work Directory
-      #   run: echo "PULUMI_WORK_DIR=$(find . -type d -name '*.Infrastructure' -print -quit)" >> $GITHUB_ENV
-
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v2
         with:

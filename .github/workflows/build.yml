@@ -2,10 +2,10 @@ name: Build and Test
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches:
-      - main # Trigger the action when code is pushed to the 'main' branch
-      - 'pull_request/**' # Trigger the action when pull requests are made against any branch
+      - main
 
 jobs:
   build-and-test:
