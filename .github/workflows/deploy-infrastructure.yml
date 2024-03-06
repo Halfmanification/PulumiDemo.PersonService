@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     env: 
       DEPLOY_ENVIRONMENT: dev
-    environment: ${{ DEPLOY_ENVIRONMENT }}
+    environment:
+      name: ${{ DEPLOY_ENVIRONMENT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
