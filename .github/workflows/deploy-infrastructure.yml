@@ -20,7 +20,7 @@ jobs:
     env: 
       DEPLOY_ENVIRONMENT: dev
     environment:
-      name: ${{ DEPLOY_ENVIRONMENT }}
+      name: ${{ env.DEPLOY_ENVIRONMENT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
