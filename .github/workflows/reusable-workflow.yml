@@ -1,20 +1,19 @@
 name: Deploy Infrastructure Test 1
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       environment:
-        description: 'The environment to deploy to'
+        type: string
         required: true
       pulumi_azure_storage_account:
-        description: 'The name of the Azure Storage Account to use for Pulumi state'
+        type: string
         required: true
       pulumi_working_directory:
-        description: 'The directory containing the Pulumi project'
+        type: string
         required: true
     secrets:
       azure_credentials:
-        description: 'The Azure credentials to use for deployment'
         required: true
 
 jobs:
