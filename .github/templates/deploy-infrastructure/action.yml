@@ -72,7 +72,7 @@ runs:
       with:
         command: up
         work-dir: ${{ inputs.pulumi_working_directory }}
-        stack-name: ${{ env.PULUMI_PROJECT_NAME}}
+        stack-name: ${{ env.PULUMI_STACK_NAME}}
         cloud-url: azblob://pulumi-stacks
         secrets-provider: passphrase
       env:
