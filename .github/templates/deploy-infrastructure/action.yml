@@ -74,6 +74,7 @@ runs:
         work-dir: ${{ inputs.pulumi_working_directory }}
         stack-name: ${{ env.PULUMI_STACK_NAME}}
         cloud-url: azblob://pulumi-stacks
-        secrets-provider: default
+        secrets-provider: passphrase
       env:
+        PULUMI_CONFIG_PASSPHRASE: ""
         DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
