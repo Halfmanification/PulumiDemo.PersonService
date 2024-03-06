@@ -23,15 +23,15 @@ jobs:
       - name: Print azure credentials Again
         run: echo ${{ secrets.AZURE_CREDENTIALS }}
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v2
-      #   with:
-      #     ref: ${{ github.event.workflow_run.head_branch }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
 
-      # - name: Deploy Infrastructure
-      #   uses: ./.github/workflows/testtemplate1.yml
-      #   with:
-      #     environment: dev
-      #     pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-      #     pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
-      #     azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Deploy Infrastructure
+        uses: ./.github/templates/testtemplate1.yml
+        with:
+          environment: dev
+          pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+          pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
+          azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
