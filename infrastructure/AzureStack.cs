@@ -10,11 +10,13 @@ namespace PulumiDemo.PersonService.Infrastructure;
 
 public class AzureStack : Stack
 {
+    private readonly String _env;
     private readonly Names _names;
 
     public AzureStack()
     {
-        _names = new Names("PulumiDemo.PersonService", "PDPerSer", "dev");
+        _env = Environment.GetEnvironmentVariable("DEPLOY_ENVIRONMENT") ?? throw new ArgumentNullException("DEPLOY_ENVIRONMENT is not set.");
+        _names = new Names("PulumiDemo.PersonService", "PDPerSer", _env);
 
         CreateResources();
     }

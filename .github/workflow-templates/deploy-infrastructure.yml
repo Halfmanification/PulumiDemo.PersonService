@@ -17,7 +17,6 @@ jobs:
   deploy:
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    environment: dev
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -74,4 +73,3 @@ jobs:
           secrets-provider: passphrase
         env:
           PULUMI_CONFIG_PASSPHRASE: ""
-          DEPLOY_ENVIRONMENT: ${{ github.environment }}
