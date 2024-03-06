@@ -20,7 +20,7 @@ jobs:
     environment: dev
     steps:
       - name: Deploy Infrastructure
-        uses: ../workflow-templates/template.yml
+        uses: ./.github/templates/template.yml
         with:
           environment: dev
           pulumi_azure_storage_account: ${{ env.AZURE_STORAGE_ACCOUNT }}

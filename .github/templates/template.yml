@@ -1,3 +1,5 @@
+name: Deploy Infrastructure Template
+
 inputs:
   environment:
     description: 'The environment to deploy to'
