@@ -7,13 +7,13 @@ on:
       - main # Trigger the action when code is pushed to the 'main' branch
     paths:
       - '.github/workflows/*-infrastructure.yml' # Watch for changes in infrastructure pipeline YAML files
-      - 'src/**/*.csproj' # Watch for changes to infrastructure project csproj files
+      - './infrastructure/**/*.csproj' # Watch for changes to infrastructure project csproj files
   pull_request:
     branches:
       - main # Trigger the action when pull requests are made against the 'main' branch
     paths:
       - '.github/workflows/*-infrastructure.yml' # Watch for changes in infrastructure pipeline YAML files
-      - 'src/**/*Infrastructure.csproj' # Watch for changes to infrastructure project csproj files
+      - './infrastructure/**/*.csproj' # Watch for changes to infrastructure project csproj files
 
 jobs:
   build-and-test:
