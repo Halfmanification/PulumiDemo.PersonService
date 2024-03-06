@@ -19,59 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Parse Azure Credentials into Environment Variables
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        run: | 
-          echo "ARM_CLIENT_ID=$( jq -r '.clientId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
-          echo "ARM_CLIENT_SECRET=$( jq -r '.clientSecret' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
-          echo "ARM_SUBSCRIPTION_ID=$( jq -r '.subscriptionId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
-          echo "ARM_TENANT_ID=$( jq -r '.tenantId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Setup Dotnet
-        uses: actions/setup-dotnet@v2
+      - name: Deploy Infrastructure
+        uses: ../workflow-templates/template.yml
         with:
-          dotnet-version: 8.0.x
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Check if Pulumi CLI is installed
-        id: pulumi-check
-        run: pulumi version || echo "Pulumi CLI not found"
-
-      - name: Install Pulumi CLI
-        if: steps.pulumi-check.outcome == 'failure'
-        run: |
-          curl -fsSL https://get.pulumi.com | sh
-          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
-
-      - name: Pulumi Login
-        run: pulumi login --cloud-url azblob://pulumi-stacks
-
-      - name: Get pulumi stack name
-        run: |
-          echo "PULUMI_PROJECT_NAME=$(grep 'name:' ${{ env.PULUMI_WORK_DIR }}/Pulumi.yml | awk '{print $2}')" >> $GITHUB_ENV
-
-      - name: Ensure Pulumi Stack
-        run: |
-          cd ${{ env.PULUMI_WORK_DIR }}
-          pulumi stack select ${{ env.PULUMI_PROJECT_NAME}} || pulumi stack init ${{ env.PULUMI_PROJECT_NAME}}
-
-      - name: Pulumi Up (Deploy)
-        uses: pulumi/actions@v4
-        with:
-          command: up
-          work-dir: ${{ env.PULUMI_WORK_DIR }}
-          stack-name: ${{ env.PULUMI_PROJECT_NAME}}
-          cloud-url: azblob://pulumi-stacks
-          secrets-provider: passphrase
-        env:
-          PULUMI_CONFIG_PASSPHRASE: ""
-          DEPLOY_ENVIRONMENT: dev
+          environment: dev
+          pulumi_azure_storage_account: ${{ env.AZURE_STORAGE_ACCOUNT }}
+          pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
