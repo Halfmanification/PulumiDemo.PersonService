@@ -17,11 +17,14 @@ env:
 
 jobs:
   call-template:
+    runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
-    uses: Halfmanification/PulumiDemo.PersonService/.github/workflows/testtemplate1.yml@main
-    with:
-      environment: dev
-      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-      pulumi_working_directory: "./infrastructure"
-    secrets:
-      azure_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+    steps:
+      - name: Deploy Infrastructure
+        uses: ./.github/workflows/testtemplate1.yml
+        with:
+          environment: dev
+          pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+          pulumi_working_directory: ${{ env.PULUMI_WORK_DIR }}
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}

@@ -1,20 +1,12 @@
 name: Deploy Infrastructure Test 1
 
 on:
-  workflow_call:
-    inputs:
-      environment:
-        type: string
-        required: true
-      pulumi_azure_storage_account:
-        type: string
-        required: true
-      pulumi_working_directory:
-        type: string
-        required: true
-    secrets:
-      azure_credentials:
-        required: true
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -27,7 +19,7 @@ jobs:
 
       - name: Parse Azure Credentials into Environment Variables
         env:
-          AZURE_CREDENTIALS: ${{ secrets.azure_credentials }}
+          AZURE_CREDENTIALS: ${{ env.AZURE_CREDENTIALS }}
         run: |
           echo "ARM_CLIENT_ID=$( jq -r '.clientId' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
           echo "ARM_CLIENT_SECRET=$( jq -r '.clientSecret' <<< $AZURE_CREDENTIALS )" >> $GITHUB_ENV;
@@ -43,7 +35,7 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.azure_credentials }}
+          creds: ${{ env.AZURE_CREDENTIALS }}
         
       - name: Check if Pulumi CLI is installed
         shell: bash
