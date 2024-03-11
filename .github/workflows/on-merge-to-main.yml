@@ -13,7 +13,6 @@ jobs:
 
   deploy-to-dev:
     name: DEV - Deploy
-    environment: dev
     needs: build-and-test
     uses: ./.github/workflows/deploy-to-env.yml
     with:
@@ -25,7 +24,6 @@ jobs:
   
   deploy-to-test:
     name: TEST - Deploy
-    environment: test
     needs: build-and-test
     uses: ./.github/workflows/deploy-to-env.yml
     with:
@@ -37,7 +35,6 @@ jobs:
   
   deploy-to-prod:
     name: PROD - Deploy
-    environment: prod
     needs: build-and-test
     uses: ./.github/workflows/deploy-to-env.yml
     with:
