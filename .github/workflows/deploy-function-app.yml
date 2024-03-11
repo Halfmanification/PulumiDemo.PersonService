@@ -1,0 +1,73 @@
+name: Deploy Function App
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      azure_functionapp_name:
+        type: string
+        required: true
+      azure_functionapp_package_path:
+        type: string
+        required: true
+    secrets: inherit
+
+jobs:
+  deploy-function-app:
+    environment: ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        enable-AzPSSession: true
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    # - name: Build and publish
+    #   run: |
+    #     cd ${{ inputs.azure_functionapp_package_path }}
+    #     dotnet build --configuration Release
+    #     dotnet publish --configuration Release --output ./output
+    #     tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz ./output
+    #     echo "HEEEEEERE: "
+    #     ls -la ./output
+    #     echo "AND: "
+    #     ls -la .
+    #     echo "AND AGAIN: "
+    #     ls -la ..
+    
+    # - name: Test where we are
+    #   run: |
+    #     echo "HEEEEEERE: "
+    #     ls -la ${{ inputs.azure_functionapp_package_path }}
+
+    # - name: Deploy to Azure Function App
+    #   uses: azure/webapps-deploy@v3
+    #   with: 
+    #     app-name: ${{ inputs.azure_functionapp_name }}
+    #     package: ${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz
+    #     type: zip
+
+    - name: 'Resolve Project Dependencies Using Dotnet'
+      shell: bash
+      run: |
+        pushd './${{ inputs.azure_functionapp_package_path }}'
+        dotnet build --configuration Release --output ./output
+        popd
+    
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ inputs.azure_functionapp_name }}
+        package: '${{ inputs.azure_functionapp_package_path }}/output'
+    
+    - name: Logout
+      run: |
+        az logout

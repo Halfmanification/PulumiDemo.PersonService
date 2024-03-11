@@ -1,0 +1,24 @@
+name: Pull Request Workflow
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  setup-dotnet:
+    uses: ./.github/workflows/setup-dotnet.yml
+
+  build-and-test:
+    needs: setup-dotnet
+    uses: ./.github/workflows/build-and-test.yml
+
+  # preview-infrastructure-dev:
+  #   needs: [setup-dotnet, build-and-test]
+  #   uses: ./.github/workflows/preview-infrastructure.yml
+  #   with:
+  #     environment: 'dev'
+  #     pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+  #   secrets: inherit

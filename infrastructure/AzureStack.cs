@@ -1,10 +1,13 @@
 using Pulumi;
 using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.Storage;
+using Pulumi.AzureNative.Web;
+using Pulumi.AzureNative.Web.Inputs;
 
 using StorageSkuArgs = Pulumi.AzureNative.Storage.Inputs.SkuArgs;
 using StorageSkuName = Pulumi.AzureNative.Storage.SkuName;
 using StorageKind = Pulumi.AzureNative.Storage.Kind;
+using AspDescriptionArgs = Pulumi.AzureNative.Web.Inputs.SkuDescriptionArgs;
 
 namespace PulumiDemo.PersonService.Infrastructure;
 
@@ -43,5 +46,41 @@ public class AzureStack : Stack
             AllowBlobPublicAccess = false,
             MinimumTlsVersion = TLS_Versions.TLS1_2,
         }, new() { DependsOn = { resourceGroup } });
+
+        var storageAccountConnectionString = storageAccount.GetConnectionString(_names.ResourceGroup);
+
+        var appServicePlan = new AppServicePlan(_names.AppServicePlan, new()
+        {
+            Kind = "FunctionApp",
+            ResourceGroupName = resourceGroup.Name,
+            Location = resourceGroup.Location,
+            Name = _names.AppServicePlan,
+            Sku = new AspDescriptionArgs
+            {
+                Name = "Y1",
+                Tier = "Dynamic",
+            }
+        }, new() { DependsOn = { resourceGroup } });
+
+        var functionApp = new WebApp(_names.FunctionApp, new()
+        {
+            Kind = "functionapp",
+            ResourceGroupName = resourceGroup.Name,
+            Location = resourceGroup.Location,
+            ServerFarmId = appServicePlan.Id,
+            HttpsOnly = true,
+            Name = _names.FunctionApp,
+            SiteConfig = new SiteConfigArgs
+            {
+                AppSettings = new Dictionary<Input<string>, Input<string>>()
+                {
+                    { "AzureWebJobsStorage", storageAccountConnectionString },
+                    { "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING", storageAccountConnectionString },
+                    { "WEBSITE_CONTENTSHARE", _names.FunctionApp },
+                    { "FUNCTIONS_WORKER_RUNTIME", "dotnet" },
+                    { "FUNCTIONS_EXTENSION_VERSION", "~4" }
+                }.ToNameValueList()
+            }
+        }, new() { DependsOn = { storageAccount, appServicePlan } });
     }
 }

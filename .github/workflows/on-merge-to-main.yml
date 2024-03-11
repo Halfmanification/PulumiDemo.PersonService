@@ -1,0 +1,35 @@
+name: Deploy Workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  FUNCTION_APP_PACKAGE_PATH: ./src/PulumiDemo.PersonService
+
+jobs:
+  setup-dotnet:
+    uses: ./.github/workflows/setup-dotnet.yml
+
+  build-and-test:
+    needs: setup-dotnet
+    uses: ./.github/workflows/build-and-test.yml
+
+  deploy-infrastructure-dev:
+    needs: build-and-test
+    uses: ./.github/workflows/deploy-infrastructure.yml
+    with:
+      environment: 'dev'
+      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+    secrets: inherit
+  
+  deploy-service-dev:
+    needs: deploy-infrastructure-dev
+    uses: ./.github/workflows/deploy-function-app.yml
+    with:
+      environment: 'dev'
+      azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
+      azure_functionapp_package_path: ${{ env.FUNCTION_APP_PACKAGE_PATH }}
+    secrets: inherit

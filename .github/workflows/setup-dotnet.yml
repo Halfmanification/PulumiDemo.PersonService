@@ -1,0 +1,18 @@
+name: Setup Dotnet
+
+on:
+  workflow_call:
+    inputs:
+      dotnet-version:
+        type: string
+        default: '8.0.x'
+        required: false
+
+jobs:
+  setup-dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ inputs.dotnet-version }}
