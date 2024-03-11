@@ -31,5 +31,5 @@ jobs:
     with:
       environment: 'dev'
       azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
-      azure_functionapp_package_path: ${{ env.FUNCTION_APP_PACKAGE_PATH }}
+      azure_functionapp_package_path: './src/PulumiDemo.PersonService'
     secrets: inherit
