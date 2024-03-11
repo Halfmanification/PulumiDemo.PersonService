@@ -12,7 +12,6 @@ on:
       azure_functionapp_package_path:
         type: string
         required: true
-    secrets: inherit
 
 jobs:
   deploy-function-app:
