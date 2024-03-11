@@ -14,7 +14,7 @@ jobs:
   #   uses: ./.github/workflows/setup-dotnet.yml
 
   build-and-test:
-    needs: setup-dotnet
+    # needs: setup-dotnet
     uses: ./.github/workflows/build-and-test.yml
 
   deploy-infrastructure-dev:
