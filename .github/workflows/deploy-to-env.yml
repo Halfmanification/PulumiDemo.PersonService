@@ -18,19 +18,19 @@ on:
 
 jobs:
   deploy-infrastructure:
-    name: ${{ inputs.environment@U } - Deploy Infrastructure
+    name: ${{ inputs.environment@U }} - Deploy Infrastructure
     uses: ./.github/workflows/deploy-infrastructure.yml
     with:
-      environment: ${{ inputs.environment }
+      environment: ${{ inputs.environment }}
       pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
     secrets: inherit
 
   deploy-service:
-    name: ${{ inputs.environment@U } - Deploy Service
+    name: ${{ inputs.environment@U }} - Deploy Service
     needs: deploy-infrastructure
     uses: ./.github/workflows/deploy-function-app.yml
     with:
-      environment: ${{ inputs.environment }
+      environment: ${{ inputs.environment }}
       azure_functionapp_name: ${{ inputs.azure_functionapp_name }}
       azure_functionapp_package_path: ${{ inputs.azure_functionapp_package_path }}
     secrets: inherit
