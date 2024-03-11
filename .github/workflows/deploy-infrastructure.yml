@@ -77,5 +77,5 @@ jobs:
           cloud-url: azblob://pulumi-stacks
           secrets-provider: passphrase
         env:
-          PULUMI_CONFIG_PASSPHRASE: " "
+          PULUMI_CONFIG_PASSPHRASE: "supersecret"
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
