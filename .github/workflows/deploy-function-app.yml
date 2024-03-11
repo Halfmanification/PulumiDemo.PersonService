@@ -20,40 +20,15 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Login to Azure
-      uses: azure/login@v2
+      uses: azure/login@v4
       with:
         enable-AzPSSession: true
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # - name: Build and publish
-    #   run: |
-    #     cd ${{ inputs.azure_functionapp_package_path }}
-    #     dotnet build --configuration Release
-    #     dotnet publish --configuration Release --output ./output
-    #     tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz ./output
-    #     echo "HEEEEEERE: "
-    #     ls -la ./output
-    #     echo "AND: "
-    #     ls -la .
-    #     echo "AND AGAIN: "
-    #     ls -la ..
-    
-    # - name: Test where we are
-    #   run: |
-    #     echo "HEEEEEERE: "
-    #     ls -la ${{ inputs.azure_functionapp_package_path }}
-
-    # - name: Deploy to Azure Function App
-    #   uses: azure/webapps-deploy@v3
-    #   with: 
-    #     app-name: ${{ inputs.azure_functionapp_name }}
-    #     package: ${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz
-    #     type: zip
-
-    - name: 'Resolve Project Dependencies Using Dotnet'
+    - name: Build source code with Release configuration
       shell: bash
       run: |
         pushd './${{ inputs.azure_functionapp_package_path }}'
