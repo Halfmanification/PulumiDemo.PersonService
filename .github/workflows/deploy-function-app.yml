@@ -15,6 +15,7 @@ on:
 
 jobs:
   deploy-function-app:
+    name: Deploy Function App
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
 

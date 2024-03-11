@@ -14,7 +14,8 @@ on:
         required: true
 
 jobs:
-  deploy:
+  deploy-infrastructure:
+    name: Deploy Infrastructure
     environment: ${{ inputs.environment }}
     runs-on: ubuntu-latest
     steps:

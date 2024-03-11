@@ -6,9 +6,6 @@ on:
     branches:
       - main
 
-env:
-  FUNCTION_APP_PACKAGE_PATH: ./src/PulumiDemo.PersonService
-
 jobs:
   build-and-test:
     name: Build and Test
@@ -16,11 +13,36 @@ jobs:
 
   deploy-to-dev:
     name: DEV - Deploy
+    environment: dev
     needs: build-and-test
     uses: ./.github/workflows/deploy-to-env.yml
     with:
       environment: 'dev'
       azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
       azure_functionapp_package_path: './src/PulumiDemo.PersonService'
-      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+      pulumi_azure_storage_account: 'bopulumisa'
+    secrets: inherit
+  
+  deploy-to-test:
+    name: TEST - Deploy
+    environment: test
+    needs: build-and-test
+    uses: ./.github/workflows/deploy-to-env.yml
+    with:
+      environment: 'test'
+      azure_functionapp_name: 'pulumidemo-personservice-test-fa'
+      azure_functionapp_package_path: './src/PulumiDemo.PersonService'
+      pulumi_azure_storage_account: 'bopulumisa'
+    secrets: inherit
+  
+  deploy-to-prod:
+    name: PROD - Deploy
+    environment: prod
+    needs: build-and-test
+    uses: ./.github/workflows/deploy-to-env.yml
+    with:
+      environment: 'prod'
+      azure_functionapp_name: 'pulumidemo-personservice-prod-fa'
+      azure_functionapp_package_path: './src/PulumiDemo.PersonService'
+      pulumi_azure_storage_account: 'bopulumisa'
     secrets: inherit
