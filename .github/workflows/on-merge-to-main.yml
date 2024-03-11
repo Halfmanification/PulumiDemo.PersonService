@@ -10,26 +10,50 @@ env:
   FUNCTION_APP_PACKAGE_PATH: ./src/PulumiDemo.PersonService
 
 jobs:
-  # setup-dotnet:
-  #   uses: ./.github/workflows/setup-dotnet.yml
+
+  # Build and Test
+
+  # Deploy to DEV
+
+  # (opt) Publish pre-release nuget package
+
+  # (manual) Deploy to TEST
+
+  # (opt) Publish release nuget package
+
+  # (manual) Deploy to PROD
 
   build-and-test:
+  name: Build and Test
     # needs: setup-dotnet
     uses: ./.github/workflows/build-and-test.yml
 
-  deploy-infrastructure-dev:
+  deploy-to-dev:
+  name: DEV - Deploy
     needs: build-and-test
-    uses: ./.github/workflows/deploy-infrastructure.yml
-    with:
-      environment: 'dev'
-      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-    secrets: inherit
-  
-  deploy-service-dev:
-    needs: deploy-infrastructure-dev
-    uses: ./.github/workflows/deploy-function-app.yml
+    uses: ./.github/workflows/deploy-to-env.yml
     with:
       environment: 'dev'
       azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
       azure_functionapp_package_path: './src/PulumiDemo.PersonService'
+      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
     secrets: inherit
+
+  # deploy-infrastructure-dev:
+  # name: DEV - Deploy Infrastructure
+  #   needs: build-and-test
+  #   uses: ./.github/workflows/deploy-infrastructure.yml
+  #   with:
+  #     environment: 'dev'
+  #     pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+  #   secrets: inherit
+  
+  # deploy-service-dev:
+  # name: DEV - Deploy Service
+  #   needs: deploy-infrastructure-dev
+  #   uses: ./.github/workflows/deploy-function-app.yml
+  #   with:
+  #     environment: 'dev'
+  #     azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
+  #     azure_functionapp_package_path: './src/PulumiDemo.PersonService'
+  #   secrets: inherit
