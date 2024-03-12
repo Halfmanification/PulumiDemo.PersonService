@@ -44,13 +44,13 @@ jobs:
     #     tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz './output' 
     #     popd
       
-      - name: Build source code with Release configuration
-        run: |
-          pushd './${{ inputs.azure_functionapp_package_path }}'
-          dotnet build --configuration Release
-          dotnet publish -c Release -o './output' 
-          Compress-Archive './output/*' './${{ inputs.azure_functionapp_name }}.zip'
-          popd
+    - name: Build source code with Release configuration
+      run: |
+        pushd './${{ inputs.azure_functionapp_package_path }}'
+        dotnet build --configuration Release
+        dotnet publish -c Release -o './output' 
+        Compress-Archive './output/*' './${{ inputs.azure_functionapp_name }}.zip'
+        popd
     
     # - name: 'Run Azure Functions Action'
     #   uses: Azure/functions-action@v1 # still on node16, waiting for fix in this PR https://github.com/Azure/functions-action/pull/217
