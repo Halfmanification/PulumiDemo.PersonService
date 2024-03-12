@@ -45,6 +45,47 @@ To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need
 
 By granting both the "Contributor" and "Storage Blob Data Contributor" roles to your app registration, you ensure that it has the necessary permissions to manage resources within Azure and access blobs within the storage account, including the Pulumi state files needed for managing your infrastructure.
 
+### 2.1 Alternative way using az cli
+As an alternative to manually set this up in the Azure Portal, this is how you can do the same via command line.
+
+1. Ensure you are logged in
+```shell
+az account show || az login # This will only run az login if you are not already logged in
+```
+2. Create Service Principal (*You can name this whatever you want, and can use a single service principal for all repos, or create individual for each repository*)
+```shell
+az ad sp create-for-rbac \
+   --name "<your-sp-name>" \ # i.e. 'pulumi-deploy-dev'
+   --role "Contributor" \
+   --scopes "subscriptions/<subscription-id>"
+
+# Returns
+# {
+#   "appId": "<app-id (guid)>",
+#   "displayName": "<your-sp-name>",
+#   "password": "<service-principle-password>",
+#   "tenant": "<tenant-id>"
+# }
+```
+3. Copy the entire json result from the previous step and use the values from it to create this json:
+```json
+{
+  "clientId": "<app-id (guid)>",
+  "clientSecret": "<service-principle-password>",
+  "tenantId": "<tenant-id>",
+  "subscriptionId": "<subscription-id>"
+}
+```
+4. This is the json you need in the next section, under the "GitHub Setup" guide.
+5. We also need to give the service principal access to write files to the central storage account where all the pulumi stacks and metadata files are stored.
+```shell
+az role assignment create \
+   --role "Storage Blob Data Contributor" \
+   --assignee "<app-id (guid)>" \
+   --scope "subscriptions/<subscription-id>/resourceGroups/<pulumi-storage-account>/providers/Microsoft.Storage/storageAccounts/<pulumi-container>"
+```
+6. That's it for az cli commands! Take the json from step 3 and continue to the "GitHub Setup" section.
+
 # GitHub Setup
 
 To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need to set up secrets and variables in your GitHub repository.
@@ -60,86 +101,3 @@ To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need
   "subscriptionId": "YOUR_SUBSCRIPTION_ID"
 }
 ```
-
-## 2. Pulumi Storage Account Name
-
-**Define Pulumi Azure Storage Account Name**: Define the name of your Pulumi Azure Storage Account as a GitHub repository variable.
-   - Go to your GitHub repository > Settings > Secrets.
-   - Create a new repository variable named `PULUMI_AZURE_STORAGE_ACCOUNT`.
-   - Set its value to your Pulumi Azure Storage Account name.
-
-# Documentation of deploy-infrastructure.yml
-
-This GitHub Actions workflow automates the deployment of infrastructure to Azure using Pulumi.
-
-## Workflow Trigger
-
-The workflow is triggered by the following events:
-- Manual trigger via the "workflow_dispatch" event.
-- Push events to the "main" branch, which include changes to the workflow file or files within the `src/**/*.Infrastructure/` directory.
-
-## Environment Variables
-
-- **AZURE_STORAGE_ACCOUNT**: This variable specifies the name of the Azure Storage Account where Pulumi stacks are stored.
-
-## Jobs
-
-### Deploy
-
-This job handles the deployment of infrastructure using Pulumi.
-
-#### Conditions
-
-The job runs only when a push event occurs on the "main" branch in certain files/folders, or if manually triggered in GitHub by a user.
-
-#### Operating System
-
-The job runs on Ubuntu latest.
-
-#### Steps
-
-1. **Checkout code**: Utilizes the `actions/checkout` action to clone the repository into the runner.
-
-2. **Parse Azure Credentials into Environment Variables**:
-   - This step extracts the necessary Azure credentials from the `AZURE_CREDENTIALS` secret and sets them as environment variables.
-     - `AZURE_CREDENTIALS`: Secret containing the Azure service principal credentials in JSON format.
-     - `ARM_CLIENT_ID`: Azure service principal client ID.
-     - `ARM_CLIENT_SECRET`: Azure service principal client secret.
-     - `ARM_SUBSCRIPTION_ID`: Azure subscription ID.
-     - `ARM_TENANT_ID`: Azure tenant ID.
-
-3. **Find Work Directory**:
-   - Searches for the directory ending with ".Infrastructure" and sets it as the Pulumi work directory.
-   - The directory path is stored in the `PULUMI_WORK_DIR` environment variable.
-
-4. **Setup Dotnet**:
-   - Sets up the .NET environment with version 8.0.x.
-
-5. **Login to Azure**:
-   - Uses the `azure/login@v2` action to log in to Azure using the provided credentials.
-
-6. **Check if Pulumi CLI is installed**:
-   - Checks if the Pulumi CLI is installed on the runner.
-   - If the Pulumi CLI is not found, the job continues to the next step to install it.
-
-7. **Install Pulumi CLI**:
-   - Installs the Pulumi CLI using the `curl` command.
-   - The installation path is added to the GitHub path.
-
-8. **Pulumi Login**:
-   - Logs in to Pulumi using the Azure Blob Storage backend URL.
-
-9. **Get pulumi stack name**:
-   - Extracts the Pulumi project name from the Pulumi configuration file (`Pulumi.yml`) located in the Pulumi work directory.
-   - The project name is stored in the `PULUMI_PROJECT_NAME` environment variable.
-
-10. **Ensure Pulumi Stack**:
-    - Selects or initializes the Pulumi stack with the specified project name in the Pulumi work directory.
-
-11. **Pulumi Up (Deploy)**:
-    - Uses the `pulumi/actions@v4` action to execute the Pulumi `up` command.
-    - Deploys the infrastructure defined in the Pulumi project.
-    - Specifies the Pulumi work directory, stack name, cloud URL, and secrets provider.
-    - The passphrase for the secrets provider is provided as an environment variable.
-
-The workflow automates the deployment process, ensuring consistent and reliable infrastructure provisioning on Azure with Pulumi.
