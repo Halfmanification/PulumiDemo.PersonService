@@ -35,13 +35,21 @@ jobs:
         enable-AzPSSession: true
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Build source code with Release configuration
-      shell: bash
+    # - name: Build source code with Release configuration
+    #   shell: bash
+    #   run: |
+    #     pushd './${{ inputs.azure_functionapp_package_path }}'
+    #     dotnet build --configuration Release
+    #     dotnet publish -c Release -o './output' 
+    #     tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz './output' 
+    #     popd
+      
+      - name: Build source code with Release configuration
       run: |
         pushd './${{ inputs.azure_functionapp_package_path }}'
         dotnet build --configuration Release
         dotnet publish -c Release -o './output' 
-        tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz './output' 
+        Compress-Archive './output/*' './${{ inputs.azure_functionapp_name }}.zip'
         popd
     
     # - name: 'Run Azure Functions Action'
@@ -63,8 +71,11 @@ jobs:
     #     attempt_limit: 10
     #     attempt_delay: 60000
 
-    - name: Deploy Artifact
-      run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
+    # - name: Deploy Artifact
+    #   run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
+
+    - name: Deploy Function App
+      run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.zip" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
     
     - name: Logout
       run: |
