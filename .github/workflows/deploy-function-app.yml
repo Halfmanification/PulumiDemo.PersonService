@@ -64,7 +64,7 @@ jobs:
     #     attempt_delay: 60000
 
     - name: Deploy Artifact
-        run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
+      run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
     
     - name: Logout
       run: |
