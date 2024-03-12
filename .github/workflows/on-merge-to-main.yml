@@ -6,7 +6,7 @@ on:
     branches:
       - main
 
-vars:
+env:
   AZURE_FUNCTION_PACKAGE_PATH: './src/PulumiDemo.PersonService'
   AZURE_SUBSCRIPTION_ID: '628f5399-503b-4911-946c-aa81f4356307'
   PULUMI_STORAGE_ACCOUNT: 'bopulumisa'
@@ -23,10 +23,10 @@ jobs:
     with:
       environment: 'dev'
       azure_functionapp_name: 'pulumidemo-personservice-dev-fa'
-      azure_functionapp_package_path: ${{ vars.AZURE_FUNCTION_PACKAGE_PATH }}
+      azure_functionapp_package_path: $AZURE_FUNCTION_PACKAGE_PATH
       azure_resourcegroup_name: 'pulumidemo-personservice-dev-rg'
-      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      pulumi_azure_storage_account: ${{ vars.PULUMI_STORAGE_ACCOUNT }}
+      azure_subscription_id: $AZURE_SUBSCRIPTION_ID
+      pulumi_azure_storage_account: $PULUMI_STORAGE_ACCOUNT
     secrets: inherit
   
   deploy-to-test:
@@ -36,10 +36,10 @@ jobs:
     with:
       environment: 'test'
       azure_functionapp_name: 'pulumidemo-personservice-test-fa'
-      azure_functionapp_package_path: ${{ vars.AZURE_FUNCTION_PACKAGE_PATH }}
+      azure_functionapp_package_path: $AZURE_FUNCTION_PACKAGE_PATH
       azure_resourcegroup_name: 'pulumidemo-personservice-test-rg'
-      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      pulumi_azure_storage_account: ${{ vars.PULUMI_STORAGE_ACCOUNT }}
+      azure_subscription_id: $AZURE_SUBSCRIPTION_ID
+      pulumi_azure_storage_account: $PULUMI_STORAGE_ACCOUNT
     secrets: inherit
   
   deploy-to-prod:
@@ -49,8 +49,8 @@ jobs:
     with:
       environment: 'prod'
       azure_functionapp_name: 'pulumidemo-personservice-prod-fa'
-      azure_functionapp_package_path: ${{ vars.AZURE_FUNCTION_PACKAGE_PATH }}
+      azure_functionapp_package_path: $AZURE_FUNCTION_PACKAGE_PATH
       azure_resourcegroup_name: 'pulumidemo-personservice-prod-rg'
-      azure_subscription_id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-      pulumi_azure_storage_account: ${{ vars.PULUMI_STORAGE_ACCOUNT }}
+      azure_subscription_id: $AZURE_SUBSCRIPTION_ID
+      pulumi_azure_storage_account: $PULUMI_STORAGE_ACCOUNT
     secrets: inherit
