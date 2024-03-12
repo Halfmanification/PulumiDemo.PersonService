@@ -2,6 +2,7 @@ name: Deploy Infrastructure
 
 env:
   INFRASTRUCTURE_DIR: ./infrastructure
+  PULUMI_CONFIG_PASSPHRASE: ""
 
 on:
   workflow_call:
@@ -78,5 +79,4 @@ jobs:
           cloud-url: azblob://pulumi-stacks
           secrets-provider: passphrase
         env:
-          PULUMI_CONFIG_PASSPHRASE: ""
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
