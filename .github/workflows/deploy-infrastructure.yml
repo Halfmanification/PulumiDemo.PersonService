@@ -80,3 +80,10 @@ jobs:
           secrets-provider: passphrase
         env:
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
+      
+      # Dirty trick to let Azure ARM get in sync with itself before trying to deploy any services
+      # See https://github.com/Azure/functions-action/issues/116
+      # and https://github.com/microsoft/azure-pipelines-tasks/issues/15532 for more information about this issue
+      - name: Sleep for 30 seconds to let Azure ARM get in sync
+        sheel: bash
+        run: sleep 30
