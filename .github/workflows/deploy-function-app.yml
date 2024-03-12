@@ -49,8 +49,8 @@ jobs:
         with: |
           app-name: ${{ inputs.azure_functionapp_name }}
           package: '${{ inputs.azure_functionapp_package_path }}/output'
-        attempt_limit: 3
-        attempt_delay: 30000
+        attempt_limit: 10
+        attempt_delay: 60000
     
     - name: Logout
       run: |
