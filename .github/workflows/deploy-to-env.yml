@@ -15,6 +15,12 @@ on:
       pulumi_azure_storage_account:
         type: string
         required: true
+      azure_resourcegroup_name:
+        type: string
+        required: true
+      azure_subscription_id:
+        type: string
+        required: true
 
 jobs:
   deploy-infrastructure:
@@ -33,4 +39,6 @@ jobs:
       environment: ${{ inputs.environment }}
       azure_functionapp_name: ${{ inputs.azure_functionapp_name }}
       azure_functionapp_package_path: ${{ inputs.azure_functionapp_package_path }}
+      azure_resourcegroup_name: ${{ inputs.azure_resourcegroup_name }}
+      azure_subscription_id: ${{ inputs.azure_subscription_id }}
     secrets: inherit
