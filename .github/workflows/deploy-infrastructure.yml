@@ -67,7 +67,7 @@ jobs:
         shell: bash
         run: |
           cd ${{ env.INFRASTRUCTURE_DIR }}
-          pulumi stack select ${{ env.PULUMI_STACK_NAME }} || pulumi stack init ${{ env.PULUMI_STACK_NAME }}
+          pulumi stack select ${{ env.PULUMI_STACK_NAME }} --create
 
       - name: Pulumi Up (Deploy)
         uses: pulumi/actions@v5
@@ -78,5 +78,5 @@ jobs:
           cloud-url: azblob://pulumi-stacks
           secrets-provider: passphrase
         env:
-          PULUMI_CONFIG_PASSPHRASE: "supersecret"
+          PULUMI_CONFIG_PASSPHRASE: ""
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}

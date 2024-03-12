@@ -37,7 +37,7 @@ jobs:
         popd
     
     - name: 'Run Azure Functions Action'
-      uses: Azure/functions-action@v1
+      uses: Azure/functions-action@v1 # still on node16, waiting for fix in this PR https://github.com/Azure/functions-action/pull/217
       id: fa
       with:
         app-name: ${{ inputs.azure_functionapp_name }}
