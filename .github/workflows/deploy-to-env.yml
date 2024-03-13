@@ -28,7 +28,7 @@ jobs:
     uses: ./.github/workflows/deploy-infrastructure.yml
     with:
       environment: ${{ inputs.environment }}
-      pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
+      pulumi_azure_storage_account: ${{ inputs.pulumi_azure_storage_account }}
     secrets: inherit
 
   deploy-service:
