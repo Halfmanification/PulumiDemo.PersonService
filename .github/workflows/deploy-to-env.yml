@@ -1,4 +1,4 @@
-name: Deploy Function App
+name: Deploy To Environment
 
 on:
   workflow_call:

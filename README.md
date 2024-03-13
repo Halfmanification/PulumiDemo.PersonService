@@ -88,9 +88,9 @@ az role assignment create \
 
 # GitHub Setup
 
-To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need to set up secrets and variables in your GitHub repository.
+To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need to set up any relevant secrets and/or variables in your GitHub repository.
 
-## 1. Azure Credentials
+## Azure Credentials Secret(s)
 
 1. **Create Azure Credentials JSON**: Create a JSON file containing the following fields:
 ```json
@@ -101,3 +101,5 @@ To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need
   "subscriptionId": "YOUR_SUBSCRIPTION_ID"
 }
 ```
+2. **Add GitHub secret**: In your repository settings, under 'Secrets and variables -> Actions' set up a new Secret called 'AZURE_CREDENTIALS'. This can either be a 'Repository Secret' if you only intend to deploy to a single azure subscription/environment, or you can do this whole process once per environment you intend to deploy to and store the azure credentials as multiple 'Environment Secrets'.
+

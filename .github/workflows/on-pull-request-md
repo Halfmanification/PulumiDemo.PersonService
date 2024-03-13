@@ -1,0 +1,18 @@
+# Pull Request Workflow
+
+This GitHub Actions workflow is designed to run when a pull request is opened or updated on the `main` branch, or manually triggered via workflow_dispatch. Its primary purpose is to build and test the code changes introduced in the pull request.
+
+## Trigger
+
+This workflow is triggered:
+- Manually via workflow_dispatch.
+- When a pull request is opened or updated on the `main` branch.
+
+## Jobs
+
+### Build and Test
+
+This job executes the following steps:
+- **Build and Test**: It uses the `build-and-test.yml` workflow located in the `.github/workflows` directory.
+
+This job is responsible for building and testing the code changes introduced in the pull request. It helps ensure that the changes meet the project's quality standards before they are merged into the main branch.

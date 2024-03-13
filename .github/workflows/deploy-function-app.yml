@@ -35,15 +35,6 @@ jobs:
         enable-AzPSSession: true
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # - name: Build source code with Release configuration
-    #   shell: bash
-    #   run: |
-    #     pushd './${{ inputs.azure_functionapp_package_path }}'
-    #     dotnet build --configuration Release
-    #     dotnet publish -c Release -o './output' 
-    #     tar -czf ${{ inputs.azure_functionapp_name }}.tar.gz './output' 
-    #     popd
-      
     - name: Build source code with Release configuration
       run: |
         pushd './${{ inputs.azure_functionapp_package_path }}'
@@ -51,29 +42,10 @@ jobs:
         dotnet publish -c Release -o './output' 
         Compress-Archive './output/*' './${{ inputs.azure_functionapp_name }}.zip'
         popd
-    
-    # - name: 'Run Azure Functions Action'
-    #   uses: Azure/functions-action@v1 # still on node16, waiting for fix in this PR https://github.com/Azure/functions-action/pull/217
-    #   with:
-    #     app-name: ${{ inputs.azure_functionapp_name }}
-    #     package: '${{ inputs.azure_functionapp_package_path }}/output'
 
-    # # Implemented retry with delay to let Azure ARM get in sync with itself before trying to deploy any services
-    # # See https://github.com/Azure/functions-action/issues/116
-    # # and https://github.com/microsoft/azure-pipelines-tasks/issues/15532 for more information about this issue
-    # - name: Deploy Azure Functions (with retry)
-    #   uses: Wandalen/wretry.action@master
-    #   with:
-    #     action: Azure/functions-action@v1 # still on node16, waiting for fix in this PR https://github.com/Azure/functions-action/pull/217
-    #     with: |
-    #       app-name: ${{ inputs.azure_functionapp_name }}
-    #       package: '${{ inputs.azure_functionapp_package_path }}/output'
-    #     attempt_limit: 10
-    #     attempt_delay: 60000
-
-    # - name: Deploy Artifact
-    #   run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.tar.gz" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
-
+    # Deploying with az cli instead of Azure/functions-action@v1 due to issue with ARM sync, see links below for more details
+    # https://github.com/Azure/functions-action/issues/116
+    # https://github.com/microsoft/azure-pipelines-tasks/issues/15532
     - name: Deploy Function App
       run: az functionapp deployment source config-zip --src "${{ inputs.azure_functionapp_package_path }}/${{ inputs.azure_functionapp_name }}.zip" --name "${{ inputs.azure_functionapp_name }}" --resource-group "${{ inputs.azure_resourcegroup_name }}" --subscription "${{ inputs.azure_subscription_id }}"
     

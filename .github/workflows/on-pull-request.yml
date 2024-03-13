@@ -9,11 +9,3 @@ on:
 jobs:
   build-and-test:
     uses: ./.github/workflows/build-and-test.yml
-
-  # preview-infrastructure-dev:
-  #   needs: build-and-test
-  #   uses: ./.github/workflows/preview-infrastructure.yml
-  #   with:
-  #     environment: 'dev'
-  #     pulumi_azure_storage_account: ${{ vars.PULUMI_AZURE_STORAGE_ACCOUNT }}
-  #   secrets: inherit
