@@ -4,6 +4,8 @@ To deploy your infrastructure to Azure using GitHub Actions and Pulumi, you need
 
 ## 1. Create Azure Active Directory App Registration
 
+0. **_NB!_** You might have to have an elevated role in the Azure Subscription to be allowed to do the registrations and role assignments. Specifically, you need the "Microsoft.Authorization/roleAssignments/write" permissions. The role "User Access Administrator" is one of the roles that have this. Note that this is a role scoped to the Azure Subscription, not an Azure AD role.
+
 1. **Navigate to Azure Active Directory**: Go to the [Azure portal](https://portal.azure.com/) and navigate to Azure Active Directory.
 
 2. **Create App Registration**: Under the "App registrations" section, create a new registration.
